@@ -5,6 +5,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
@@ -19,12 +20,12 @@ COPY . .
 # Create necessary directories
 RUN mkdir -p data logs
 
-# Expose port
-EXPOSE 8000
+# Expose port for Streamlit
+EXPOSE 8080
 
-# Health check
+# Health check for Streamlit
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
+    CMD curl -f http://localhost:8080/_stcore/health || exit 1
 
-# Default command
-CMD ["python", "scale_collection.py", "--interval", "600"]
+# Run Streamlit
+CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8080", "--server.address=0.0.0.0", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]
