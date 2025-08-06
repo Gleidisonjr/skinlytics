@@ -4,6 +4,7 @@
 MVP Dashboard para análise de mercado e oportunidades de trading
 """
 
+import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -13,17 +14,37 @@ import numpy as np
 from datetime import datetime, timedelta
 import time
 
-# Imports do nosso sistema
-from src.models.optimized_database import get_session, Skin as OptimizedSkin, ListingOptimized, MarketInsights, PriceHistory
-from src.services.aggregation_service import AggregationService
+# Configuração otimizada para Railway Free
+try:
+    from railway_free_config import optimize_for_railway_free, get_optimized_db_connection, RAILWAY_FREE_CONFIG
+    config = optimize_for_railway_free()
+except ImportError:
+    # Fallback se não estiver no Railway
+    config = {"max_rows_display": 1000, "auto_refresh_interval": 60}
+    
+# Imports do nosso sistema (com fallback para Railway)
+try:
+    from src.models.optimized_database import get_session, Skin as OptimizedSkin, ListingOptimized, MarketInsights, PriceHistory
+    from src.services.aggregation_service import AggregationService
+except ImportError as e:
+    st.error(f"Erro ao importar módulos: {e}")
+    st.info("Verificando configuração da aplicação...")
 
-# Configuração da página
-st.set_page_config(
-    page_title="Skinlytics - CS2 Trading Intelligence",
-    page_icon="🎯",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Configuração da página otimizada para Railway Free
+if 'RAILWAY_ENVIRONMENT' in os.environ:
+    st.set_page_config(
+        page_title="Skinlytics",
+        page_icon="🎯", 
+        layout="wide",
+        initial_sidebar_state="collapsed"  # Economizar memória no Railway
+    )
+else:
+    st.set_page_config(
+        page_title="Skinlytics - CS2 Trading Intelligence",
+        page_icon="🎯",
+        layout="wide", 
+        initial_sidebar_state="expanded"
+    )
 
 # CSS customizado
 st.markdown("""
@@ -130,12 +151,36 @@ def load_price_trends():
         session.close()
         return []
 
+def show_railway_stats():
+    """Mostra estatísticas de uso do Railway Free Plan"""
+    if 'RAILWAY_ENVIRONMENT' in os.environ:
+        try:
+            from railway_free_config import get_memory_usage
+            memory_stats = get_memory_usage()
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("💾 RAM Usado", f"{memory_stats['memory_used_mb']} MB")
+            with col2:
+                st.metric("📊 Uso (%)", f"{memory_stats['memory_percent']}%")
+            with col3:
+                st.metric("🎯 Limite", f"{memory_stats['memory_limit_mb']} MB")
+                
+            # Alerta se usar mais de 80% da memória
+            if memory_stats['memory_percent'] > 80:
+                st.warning("⚠️ Alto uso de memória! Considere otimizar queries.")
+        except Exception:
+            pass
+
 def main():
     """Função principal do dashboard"""
     
     # Header
     st.markdown('<h1 class="main-header">🎯 SKINLYTICS</h1>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; font-size: 1.2rem; color: #666;">CS2 Skin Trading Intelligence Platform</p>', unsafe_allow_html=True)
+    
+    # Mostrar stats do Railway se estiver em produção
+    show_railway_stats()
     
     # Sidebar
     with st.sidebar:
