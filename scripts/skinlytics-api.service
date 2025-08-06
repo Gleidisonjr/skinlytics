@@ -1,0 +1,18 @@
+
+[Unit]
+Description=Skinlytics API
+After=network.target postgresql.service clickhouse-server.service redis.service
+
+[Service]
+Type=notify
+User=skinlytics
+Group=skinlytics
+WorkingDirectory=/opt/skinlytics
+Environment=PATH=/opt/skinlytics/venv/bin
+ExecStart=/opt/skinlytics/venv/bin/gunicorn -c gunicorn.conf.py src.api.main:app
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

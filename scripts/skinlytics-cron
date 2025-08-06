@@ -1,0 +1,5 @@
+
+# Skinlytics Data Collection - Production
+*/5 * * * * /opt/skinlytics/venv/bin/python /opt/skinlytics/src/collectors/realtime_collector.py >> /opt/skinlytics/logs/collector.log 2>&1
+0 */6 * * * /opt/skinlytics/venv/bin/python /opt/skinlytics/src/collectors/mass_collector.py --duration 1h >> /opt/skinlytics/logs/mass_collector.log 2>&1
+0 2 * * * /opt/skinlytics/venv/bin/python /opt/skinlytics/scripts/backup_data.py >> /opt/skinlytics/logs/backup.log 2>&1

@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "total_requests": 38,
+    "successful_requests": 36,
+    "failed_requests": 2,
+    "success_rate": 94.73684210526315,
+    "rate_limited_requests": 0,
+    "duration_seconds": 63.052624,
+    "requests_per_second": 0.6026711909721632
+  },
+  "performance": {
+    "avg_response_time": 0.4974673484501086,
+    "min_response_time": 0.2760324478149414,
+    "max_response_time": 1.137617588043213
+  },
+  "rate_limiting": {
+    "last_known_limit": 50000,
+    "last_known_remaining": 49627,
+    "detected_headers": [
+      "limit",
+      "reset",
+      "remaining"
+    ]
+  },
+  "status_codes": {
+    "200": 36,
+    "400": 2
+  },
+  "recommendations": [
+    "✅ Rate limit OK (0.7%) - pode aumentar frequência"
+  ],
+  "timestamp": "2025-08-06T15:08:24.475390"
+}

@@ -1,0 +1,43 @@
+{
+  "dashboard": {
+    "title": "Skinlytics Production Monitoring",
+    "panels": [
+      {
+        "title": "API Requests/sec",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Database Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "postgresql_connections"
+          }
+        ]
+      },
+      {
+        "title": "ML Predictions/hour",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "increase(ml_predictions_total[1h])"
+          }
+        ]
+      },
+      {
+        "title": "Data Collection Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(listings_collected_total[5m])"
+          }
+        ]
+      }
+    ]
+  }
+}

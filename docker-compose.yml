@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  skinlytics-collector:
+    build: .
+    container_name: skinlytics-collector
+    restart: unless-stopped
+    environment:
+      - CSFLOAT_API_KEY=${CSFLOAT_API_KEY}
+      - DATABASE_URL=sqlite:///data/skins.db
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: python scale_collection.py --interval 600
+
+  skinlytics-monitor:
+    build: .
+    container_name: skinlytics-monitor
+    restart: unless-stopped
+    environment:
+      - CSFLOAT_API_KEY=${CSFLOAT_API_KEY}
+      - DATABASE_URL=sqlite:///data/skins.db
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: python monitor_system.py --interval 60
+
+  skinlytics-api:
+    build: .
+    container_name: skinlytics-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - CSFLOAT_API_KEY=${CSFLOAT_API_KEY}
+      - DATABASE_URL=sqlite:///data/skins.db
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000
+
+volumes:
+  skinlytics_data:
+  skinlytics_logs:

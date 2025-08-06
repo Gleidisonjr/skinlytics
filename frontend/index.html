@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Skin Tracker - Market Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stat-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
+        
+        .table-container {
+            margin: 2rem;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .table-header h2 {
+            color: #38bdf8;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover {
+            background: rgba(51, 65, 85, 0.3);
+        }
+        
+        .skin-name {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        
+        .price {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+        
+        .float-value {
+            color: #fbbf24;
+            font-family: monospace;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        
+        .spinner {
+            border: 3px solid #334155;
+            border-top: 3px solid #38bdf8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .search-container {
+            margin: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+        
+        .search-input::placeholder {
+            color: #64748b;
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid #38bdf8;
+            border-radius: 8px;
+            color: #38bdf8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(56, 189, 248, 0.2);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .listed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .sold { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 CS2 Skin Tracker</h1>
+        <p>Real-time market data powered by CSFloat API</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Listings</div>
+            <div class="stat-value" id="totalListings">-</div>
+            <div class="stat-change">Loading...</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Unique Skins</div>
+            <div class="stat-value" id="uniqueSkins">-</div>
+            <div class="stat-change">In database</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Average Price</div>
+            <div class="stat-value" id="avgPrice">-</div>
+            <div class="stat-change">USD</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Market Cap</div>
+            <div class="stat-value" id="marketCap">-</div>
+            <div class="stat-change">Estimated</div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search skins... (e.g. AK-47, AWP, Butterfly)" id="searchInput">
+        <button class="filter-btn" onclick="filterByCategory('rifle')">Rifles</button>
+        <button class="filter-btn" onclick="filterByCategory('pistol')">Pistols</button>
+        <button class="filter-btn" onclick="filterByCategory('knife')">Knives</button>
+        <button class="filter-btn" onclick="showAll()">All</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <h2>🔥 Latest Listings</h2>
+            <p style="color: #94a3b8; margin-top: 0.5rem;">Real-time data from CSFloat Market</p>
+        </div>
+        
+        <div id="loadingDiv" class="loading">
+            <div class="spinner"></div>
+            <p>Loading market data...</p>
+        </div>
+        
+        <table id="skinsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Skin</th>
+                    <th>Price (USD)</th>
+                    <th>Float</th>
+                    <th>Seller</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                </tr>
+            </thead>
+            <tbody id="skinsTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let allListings = [];
+        
+        // Função para carregar dados
+        async function loadData() {
+            try {
+                // Simular dados enquanto não temos API rodando
+                // Em produção: const response = await fetch('/api/listings');
+                
+                // Dados mockados baseados na nossa coleta
+                const mockData = [
+                    {
+                        id: 1,
+                        skin_name: "P90 | Vent Rush (Field-Tested)",
+                        price: 0.44,
+                        float_value: 0.2156,
+                        seller: "TraderPro",
+                        status: "listed",
+                        updated: "2 min ago"
+                    },
+                    {
+                        id: 2,
+                        skin_name: "M249 | Downtown (Field-Tested)", 
+                        price: 0.44,
+                        float_value: 0.1892,
+                        seller: "SkinMaster",
+                        status: "listed",
+                        updated: "3 min ago"
+                    },
+                    {
+                        id: 3,
+                        skin_name: "Dual Berettas | Flora Carnivora (Field-Tested)",
+                        price: 0.44,
+                        float_value: 0.3421,
+                        seller: "CSTrader",
+                        status: "sold",
+                        updated: "5 min ago"
+                    },
+                    {
+                        id: 4,
+                        skin_name: "StatTrak™ USP-S | Ticket to Hell (Field-Tested)",
+                        price: 1.78,
+                        float_value: 0.1567,
+                        seller: "ProGamer",
+                        status: "listed", 
+                        updated: "7 min ago"
+                    },
+                    {
+                        id: 5,
+                        skin_name: "AK-47 | Redline (Field-Tested)",
+                        price: 15.30,
+                        float_value: 0.2891,
+                        seller: "RedlineKing",
+                        status: "listed",
+                        updated: "12 min ago"
+                    }
+                ];
+                
+                allListings = mockData;
+                updateStats();
+                displayListings(allListings);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loadingDiv').innerHTML = '<p style="color: #ef4444;">Error loading data. Please try again.</p>';
+            }
+        }
+        
+        function updateStats() {
+            const totalListings = allListings.length;
+            const uniqueSkins = new Set(allListings.map(l => l.skin_name)).size;
+            const avgPrice = allListings.reduce((sum, l) => sum + l.price, 0) / totalListings;
+            const marketCap = allListings.reduce((sum, l) => sum + l.price, 0);
+            
+            document.getElementById('totalListings').textContent = totalListings.toLocaleString();
+            document.getElementById('uniqueSkins').textContent = uniqueSkins.toLocaleString();
+            document.getElementById('avgPrice').textContent = `$${avgPrice.toFixed(2)}`;
+            document.getElementById('marketCap').textContent = `$${marketCap.toFixed(2)}`;
+        }
+        
+        function displayListings(listings) {
+            const tbody = document.getElementById('skinsTableBody');
+            tbody.innerHTML = '';
+            
+            listings.forEach((listing, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="skin-name">${listing.skin_name}</td>
+                    <td class="price">$${listing.price.toFixed(2)}</td>
+                    <td class="float-value">${listing.float_value.toFixed(4)}</td>
+                    <td>${listing.seller}</td>
+                    <td><span class="status-badge ${listing.status}">${listing.status}</span></td>
+                    <td>${listing.updated}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            document.getElementById('loadingDiv').style.display = 'none';
+            document.getElementById('skinsTable').style.display = 'table';
+        }
+        
+        function filterByCategory(category) {
+            let filtered = allListings;
+            
+            if (category === 'rifle') {
+                filtered = allListings.filter(l => 
+                    l.skin_name.includes('AK-47') || 
+                    l.skin_name.includes('M4A') || 
+                    l.skin_name.includes('AWP')
+                );
+            } else if (category === 'pistol') {
+                filtered = allListings.filter(l => 
+                    l.skin_name.includes('Glock') || 
+                    l.skin_name.includes('USP') || 
+                    l.skin_name.includes('Dual Berettas')
+                );
+            } else if (category === 'knife') {
+                filtered = allListings.filter(l => 
+                    l.skin_name.includes('Knife') || 
+                    l.skin_name.includes('Bayonet')
+                );
+            }
+            
+            displayListings(filtered);
+        }
+        
+        function showAll() {
+            displayListings(allListings);
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const filtered = allListings.filter(listing => 
+                listing.skin_name.toLowerCase().includes(query)
+            );
+            displayListings(filtered);
+        });
+        
+        // Load data when page loads
+        loadData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
