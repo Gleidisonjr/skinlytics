@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+🏠 ClickHouse Configuration for Skinlytics Analytics
+Optimized for CS2 skin market data processing
+-->
+<yandex>
+    <!-- Logging -->
+    <logger>
+        <level>information</level>
+        <log>/var/log/clickhouse-server/clickhouse-server.log</log>
+        <errorlog>/var/log/clickhouse-server/clickhouse-server.err.log</errorlog>
+        <size>1000M</size>
+        <count>10</count>
+    </logger>
+
+    <!-- HTTP -->
+    <http_port>8123</http_port>
+    
+    <!-- TCP -->
+    <tcp_port>9000</tcp_port>
+    
+    <!-- Listen all interfaces -->
+    <listen_host>::</listen_host>
+    <listen_host>0.0.0.0</listen_host>
+
+    <!-- Data path -->
+    <path>/var/lib/clickhouse/</path>
+    <tmp_path>/var/lib/clickhouse/tmp/</tmp_path>
+
+    <!-- Memory settings -->
+    <max_memory_usage>4000000000</max_memory_usage>
+    <max_bytes_before_external_group_by>1000000000</max_bytes_before_external_group_by>
+    <max_bytes_before_external_sort>1000000000</max_bytes_before_external_sort>
+
+    <!-- Performance settings -->
+    <max_connections>200</max_connections>
+    <keep_alive_timeout>3</keep_alive_timeout>
+    <max_concurrent_queries>100</max_concurrent_queries>
+
+    <!-- Compression -->
+    <compression>
+        <case>
+            <method>lz4</method>
+        </case>
+    </compression>
+
+    <!-- Default profile -->
+    <profiles>
+        <default>
+            <max_memory_usage>4000000000</max_memory_usage>
+            <use_uncompressed_cache>0</use_uncompressed_cache>
+            <load_balancing>random</load_balancing>
+        </default>
+    </profiles>
+
+    <!-- Users -->
+    <users>
+        <default>
+            <password></password>
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+        </default>
+        
+        <analytics_user>
+            <password>analytics_pass_2025</password>
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+        </analytics_user>
+    </users>
+
+    <!-- Quotas -->
+    <quotas>
+        <default>
+            <interval>
+                <duration>3600</duration>
+                <queries>0</queries>
+                <errors>0</errors>
+                <result_rows>0</result_rows>
+                <read_rows>0</read_rows>
+                <execution_time>0</execution_time>
+            </interval>
+        </default>
+    </quotas>
+</yandex>

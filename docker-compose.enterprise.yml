@@ -1,0 +1,99 @@
+# 🚀 SKINLYTICS ENTERPRISE ARCHITECTURE
+# PostgreSQL + ClickHouse + Redis for Big Data & ML/AI
+
+version: '3.8'
+
+services:
+  # 🐘 PostgreSQL - Operational Database
+  postgres:
+    image: postgres:15
+    container_name: skinlytics_postgres
+    environment:
+      POSTGRES_DB: skinlytics
+      POSTGRES_USER: skinlytics_user
+      POSTGRES_PASSWORD: skinlytics_pass_2025
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      postgres 
+      -c shared_preload_libraries=pg_stat_statements
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c work_mem=4MB
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skinlytics_user -d skinlytics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 🏠 ClickHouse - Analytics Database  
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.1
+    container_name: skinlytics_clickhouse
+    environment:
+      CLICKHOUSE_DB: skinlytics_analytics
+      CLICKHOUSE_USER: analytics_user
+      CLICKHOUSE_PASSWORD: analytics_pass_2025
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native interface
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 🔴 Redis - Caching & Session Store
+  redis:
+    image: redis:7-alpine
+    container_name: skinlytics_redis
+    command: redis-server --requirepass redis_pass_2025 --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 📊 Adminer - Database Management UI
+  adminer:
+    image: adminer:4
+    container_name: skinlytics_adminer
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  clickhouse_data:
+    driver: local  
+  redis_data:
+    driver: local
+
+networks:
+  default:
+    name: skinlytics_network
+    driver: bridge

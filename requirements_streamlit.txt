@@ -1,0 +1,15 @@
+# Streamlit MVP - CS2 Skinlytics
+streamlit==1.31.0
+plotly==5.17.0
+pandas==2.2.0
+numpy==1.26.3
+
+# Database
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+
+# Environment
+python-dotenv==1.0.1
+
+# Para deploy
+gunicorn==21.2.0

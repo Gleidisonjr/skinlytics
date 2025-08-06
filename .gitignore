@@ -16,9 +16,11 @@ parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # Virtual Environment
 .venv/
@@ -33,12 +35,13 @@ env/
 
 # Database
 *.db
+*.sqlite
 *.sqlite3
-data/*.db
 
 # Logs
-logs/
 *.log
+data/*.log
+logs/
 
 # IDE
 .vscode/
@@ -50,31 +53,23 @@ logs/
 .DS_Store
 Thumbs.db
 
-# API Keys (IMPORTANTE!)
-*api_key*
-*token*
-*password*
-
-# Data Files (muito grandes)
-data/skins_*.csv
-data/*.json
-
-# Backup
-backup_*/
-
 # Temporary files
-temp/
-tmp/
 *.tmp
+*.temp
 
-# Jupyter Notebooks checkpoints
-.ipynb_checkpoints/
+# Data files (opcional - manter pequenos CSVs para exemplo)
+# data/*.csv
+# data/*.json
 
-# Docker
-.dockerignore
+# Docker volumes
+docker/postgres/data/
+docker/clickhouse/data/
 
-# Node modules (se usar frontend)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Reports
+*_report.txt
+*_benchmark_*.txt
+migration_report.txt
+performance_benchmark_*.txt
+
+# Backup files
+backup_info.txt

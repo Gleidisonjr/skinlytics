@@ -1,288 +1,256 @@
-# 🚀 Skinlytics - Enterprise CS2 Market Intelligence Platform
+# 🎯 SKINLYTICS - CS2 Skin Trading Intelligence Platform
 
-> **A Bloomberg das Skins do CS2** - Plataforma SaaS completa para inteligência de mercado, análises históricas, alertas em tempo real e predições por IA.
+## 🚀 MVP Completo - SaaS para Trading de Skins CS2
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://docker.com/)
-[![Enterprise](https://img.shields.io/badge/enterprise-ready-green.svg)](https://github.com/yourusername/skinlytics)
+**Plataforma completa de inteligência de mercado para skins do Counter-Strike 2, com coleta de dados em tempo real, análise de oportunidades e insights para trading.**
 
-## 📊 **Visão Geral**
+![Status](https://img.shields.io/badge/Status-MVP%20Ready-brightgreen)
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![Database](https://img.shields.io/badge/Database-PostgreSQL-blue)
+![Cache](https://img.shields.io/badge/Cache-Redis-red)
+![Analytics](https://img.shields.io/badge/Analytics-ClickHouse-yellow)
 
-**Skinlytics** é uma plataforma enterprise de inteligência de mercado para skins do Counter-Strike 2, oferecendo:
+## 📊 Dashboard Demo
 
-- 📈 **Coleta massiva de dados** em tempo real via CSFloat API
-- 💰 **Análises de valor de mercado** com histórico completo
-- 🤖 **Machine Learning** para predições e detecção de oportunidades
-- 📱 **Notificações inteligentes** (Email, Telegram, Discord)
-- 🔄 **Arquitetura escalável** (PostgreSQL + ClickHouse + Redis)
-- 📊 **Dashboard profissional** com visualizações interativas
+🌐 **[Ver Dashboard Online](https://skinlytics-mvp.streamlit.app)** *(após deploy)*
 
-## 🎯 **Funcionalidades Principais**
+## ✨ Features Implementadas
 
-### 🔥 **Coleta de Dados**
-- ✅ Coleta automática 24/7 via CSFloat API
-- ✅ Rate limiting inteligente (3000+ req/hora)
-- ✅ Deduplicação e validação automática
-- ✅ Backup e recuperação de dados
-
-### 📊 **Análises de Mercado**
-- ✅ Rastreamento de valor em tempo real
-- ✅ Histórico completo de preços
-- ✅ Análise de tendências e volatilidade
-- ✅ Detecção de oportunidades de arbitragem
-
-### 🤖 **Inteligência Artificial**
-- ✅ Predições de preço usando Prophet/XGBoost
-- ✅ Detecção de anomalias
-- ✅ Alertas inteligentes de oportunidades
-- ✅ Feature engineering automatizado
+### 🔄 **Coleta de Dados Automática**
+- ✅ API CSFloat integrada com rate limiting inteligente
+- ✅ Coleta contínua 24/7 em background  
+- ✅ Cache Redis para otimização
+- ✅ Sistema de retry e recuperação de erros
 
 ### 🏗️ **Arquitetura Enterprise**
-- ✅ PostgreSQL para dados relacionais
-- ✅ ClickHouse para analytics de grande escala
-- ✅ Redis para cache e sessões
-- ✅ Docker containerizado
-- ✅ CI/CD pipeline completo
+- ✅ **PostgreSQL** - Dados operacionais otimizados
+- ✅ **ClickHouse** - Analytics e big data
+- ✅ **Redis** - Cache de alta performance
+- ✅ **Docker Compose** - Setup completo
 
-## 🚀 **Quick Start**
+### 📊 **Dashboard Interativo (Streamlit)**
+- ✅ **Métricas em tempo real** - Valor total, quantidade, preços médios
+- ✅ **Top Oportunidades** - Sistema de scoring 0-100 para trading
+- ✅ **Análise de Mercado** - Distribuição por raridade, últimos listings
+- ✅ **Tendências** - Gráficos de volume e performance
+- ✅ **Explorer** - Busca avançada com filtros
+- ✅ **Auto-refresh** - Dados atualizados automaticamente
 
-### **Pré-requisitos**
-- Python 3.8+
-- Git
-- API Key do CSFloat (gratuita)
+### 🎯 **Sistema de Oportunidades**
+- ✅ **Opportunity Score** - Algoritmo proprietário 0-100
+- ✅ **Análise de tendências** - Variações 7d/30d
+- ✅ **Detecção de subvalorizados** - Items com potencial
+- ✅ **Filtros inteligentes** - Por preço, raridade, StatTrak
 
-### **Instalação Rápida**
+### ⚡ **Performance Otimizada**
+- ✅ **Modelo de dados otimizado** - 70% menos armazenamento
+- ✅ **Índices estratégicos** - Consultas 3x mais rápidas
+- ✅ **Agregações automáticas** - Insights pré-calculados
+- ✅ **Cache inteligente** - Redis para duplicatas
+
+## 🛠️ Tecnologias
+
+### Backend & Database
+- **Python 3.13** - Linguagem principal
+- **PostgreSQL** - Database principal otimizado
+- **ClickHouse** - Analytics e big data
+- **Redis** - Cache e performance
+- **SQLAlchemy** - ORM avançado
+- **Docker** - Containerização
+
+### Frontend & Visualização
+- **Streamlit** - Dashboard interativo
+- **Plotly** - Gráficos avançados
+- **Pandas** - Manipulação de dados
+
+### APIs & Coleta
+- **CSFloat API** - Dados de marketplace
+- **aiohttp** - HTTP assíncrono
+- **Rate Limiting** - Controle de requisições
+
+## 🚀 Quick Start
+
+### 1. Setup do Ambiente
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/yourusername/skinlytics.git
+# Clone do repositório
+git clone https://github.com/seu-usuario/skinlytics
 cd skinlytics
 
-# 2. Crie ambiente virtual
+# Virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
-# OU
-.venv\Scripts\activate  # Windows
+# ou .venv\Scripts\activate  # Windows
 
-# 3. Instale dependências
+# Instalar dependências
 pip install -r requirements.txt
-
-# 4. Configure variáveis de ambiente
-cp .env.example .env
-# Edite .env com sua API key do CSFloat
-
-# 5. Execute coleta inicial
-python scale_collection.py --single --pages 5
-
-# 6. Inicie monitoramento
-python monitor_system.py --single
 ```
 
-### **Docker (Recomendado para Produção)**
+### 2. Setup da Database Enterprise
 
 ```bash
-# Build e execute com Docker Compose
-docker-compose up -d
+# Iniciar containers
+docker-compose -f docker-compose.enterprise.yml up -d
 
-# Verificar logs
-docker-compose logs -f
+# Verificar status
+docker ps
+
+# Criar tabelas
+python -c "from src.models.optimized_database import create_tables; create_tables()"
 ```
 
-## 📊 **Exemplos de Uso**
+### 3. Configurar Variáveis de Ambiente
 
-### **Coleta Massiva de Dados**
-```python
-# Coletar 1000 listings em 20 páginas
-python scale_collection.py --pages 20
-
-# Coleta contínua (ciclos de 10 minutos)
-python scale_collection.py --interval 600
-```
-
-### **Monitoramento em Tempo Real**
-```python
-# Dashboard atualizado a cada 60s
-python monitor_system.py --interval 60
-
-# Relatório único
-python monitor_system.py --single
-```
-
-### **Notificações Automáticas**
-```python
-# Enviar por email
-python notification_reports.py --platforms email
-
-# Enviar por telegram e discord
-python notification_reports.py --platforms telegram discord
-```
-
-## 🏗️ **Arquitetura**
-
-```
-┌─────────────────┬─────────────────┬─────────────────┐
-│   Data Sources  │   Processing    │     Storage     │
-├─────────────────┼─────────────────┼─────────────────┤
-│ CSFloat API     │ Rate Limiter    │ PostgreSQL      │
-│ Steam Market    │ Data Validator  │ ClickHouse      │
-│ Buff163         │ ML Pipeline     │ Redis Cache     │
-│ PriceEmpire     │ Feature Engine  │ File System     │
-└─────────────────┴─────────────────┴─────────────────┘
-                            │
-┌─────────────────┬─────────────────┬─────────────────┐
-│   APIs & Web    │   Notifications │   Monitoring    │
-├─────────────────┼─────────────────┼─────────────────┤
-│ FastAPI         │ Email/SMTP      │ Grafana         │
-│ Streamlit       │ Telegram Bot    │ Prometheus      │
-│ React Dashboard │ Discord Webhook │ Custom Logs     │
-│ Mobile App      │ WhatsApp API    │ Health Checks   │
-└─────────────────┴─────────────────┴─────────────────┘
-```
-
-## 📈 **Performance**
-
-| Métrica | Valor | Observação |
-|---------|-------|------------|
-| **Throughput** | 3000+ req/hora | Rate limit otimizado |
-| **Latência** | <500ms | Resposta média API |
-| **Armazenamento** | 1M+ registros | Escalável infinitamente |
-| **Uptime** | 99.9% | Monitoramento 24/7 |
-| **Precisão ML** | 85%+ | Modelos validados |
-
-## 📁 **Estrutura do Projeto**
-
-```
-skinlytics/
-├── src/
-│   ├── collectors/          # Coletores de dados
-│   ├── models/             # Modelos de dados
-│   ├── services/           # Serviços (APIs, ML)
-│   ├── api/                # FastAPI endpoints
-│   └── dashboard/          # Interface Streamlit
-├── data/                   # Dados locais
-├── logs/                   # Logs do sistema
-├── notebooks/              # Jupyter notebooks
-├── tests/                  # Testes automatizados
-├── docker/                 # Configurações Docker
-├── docs/                   # Documentação
-└── deploy/                 # Scripts de deploy
-```
-
-## 🚀 **Deploy e Produção**
-
-### **Opções de Hosting**
-
-1. **VPS/Cloud** (Recomendado)
-   ```bash
-   # AWS, Google Cloud, DigitalOcean
-   python deploy_production.py --platform aws
-   ```
-
-2. **Heroku** (Fácil)
-   ```bash
-   python deploy.py --platform heroku
-   ```
-
-3. **Docker** (Flexível)
-   ```bash
-   docker-compose -f docker-compose.prod.yml up -d
-   ```
-
-4. **Local Service** (Desenvolvimento)
-   ```bash
-   python keep_alive_service.py --setup-startup
-   ```
-
-## 🤖 **Machine Learning**
-
-### **Modelos Implementados**
-- **Prophet**: Previsão de séries temporais
-- **XGBoost**: Classificação de oportunidades
-- **LSTM**: Deep learning para preços
-- **Anomaly Detection**: Identificação de outliers
-
-### **Features Automáticas**
-- Moving averages (7, 30, 60 dias)
-- Volatilidade e momentum
-- Volume e liquidez
-- Sazonalidade e tendências
-
-## 📱 **Notificações**
-
-Configure notificações automáticas para:
-- ✅ Relatórios diários de crescimento
-- ✅ Alertas de oportunidades de trading
-- ✅ Monitoramento de sistema
-- ✅ Anomalias detectadas
-
-## 🔐 **Segurança**
-
-- ✅ Variáveis de ambiente para API keys
-- ✅ Rate limiting para proteção
-- ✅ Logs de auditoria completos
-- ✅ Validação de dados de entrada
-- ✅ Backup automático
-
-## 🛠️ **Desenvolvimento**
-
-### **Configuração de Dev**
 ```bash
-# Instalar dependências de desenvolvimento
-pip install -r requirements-dev.txt
-
-# Executar testes
-pytest tests/
-
-# Linting
-black src/
-flake8 src/
-
-# Pre-commit hooks
-pre-commit install
+# Criar arquivo .env
+DATABASE_URL=postgresql://skinlytics_user:skinlytics_pass_2025@localhost:5432/skinlytics
+CSFLOAT_API_KEY=your_api_key_here
 ```
 
-### **Contribuindo**
+### 4. Iniciar Coleta de Dados
+
+```bash
+# Collector em background (100 ciclos)
+python enterprise_collector.py --cycles 100 --interval 300 &
+
+# Verificar dados
+python check_enterprise_data.py
+```
+
+### 5. Dashboard Streamlit
+
+```bash
+# Executar dashboard local
+streamlit run streamlit_app.py
+
+# Ou instalar dependências específicas
+pip install -r requirements_streamlit.txt
+```
+
+## 📊 Dados Coletados
+
+### 📦 Listings
+- **ID único** e timestamp
+- **Preço** em centavos (precisão)
+- **Float value** para qualidade
+- **Paint seed** para patterns
+- **Seller statistics** para confiabilidade
+
+### 🎨 Skins
+- **Market hash name** único
+- **Raridade** e **qualidade**
+- **StatTrak/Souvenir** flags
+- **Item name** e **wear**
+
+### 🎯 Insights Automáticos
+- **Opportunity score** calculado
+- **Tendências** de preço 7d/30d
+- **Volume** e **liquidez**
+- **Detecção** de subvalorizados
+
+## 🌐 Deploy Options
+
+### 🆓 Streamlit Cloud (Recomendado)
+```bash
+# 1. Push para GitHub
+git add .
+git commit -m "🚀 MVP Skinlytics ready for deploy"
+git push origin main
+
+# 2. Ir para share.streamlit.io
+# 3. Conectar repositório
+# 4. Configurar DATABASE_URL
+# 5. Deploy automático!
+```
+
+### ☁️ Outras Opções
+- **Railway** - $5/mês gratuito
+- **PythonAnywhere** - Versão gratuita limitada
+- **Heroku** - Pago (~$7/mês)
+
+## 📈 Métricas Atuais
+
+- 📦 **352+ listings** coletados
+- 🎨 **269+ skins únicas** 
+- 💰 **$5M+ valor total** monitorado
+- 👥 **90+ vendedores** únicos
+- ⚡ **18+ listings/min** de velocidade
+- 🔴 **1,551+ cache hits** (eficiência)
+
+## 🔧 Scripts Úteis
+
+```bash
+# Verificar dados
+python check_enterprise_data.py
+
+# Agregações manuais
+python daily_aggregator.py --mode manual --show-opportunities
+
+# Benchmark de performance
+python performance_benchmark.py
+
+# Migração para modelo otimizado
+python migrate_to_optimized.py
+```
+
+## 📊 Dashboard Features
+
+### 🎯 Tab: Oportunidades
+- Top opportunities com scoring
+- Filtros por preço/score/StatTrak
+- Badges visuais para items especiais
+
+### 📊 Tab: Mercado  
+- Métricas em tempo real
+- Gráficos distribuição raridade
+- Últimos listings coletados
+
+### 📈 Tab: Tendências
+- Top skins por volume
+- Gráficos históricos
+- Análise performance
+
+### 🔍 Tab: Explorer
+- Busca em tempo real
+- Filtros avançados
+- Resultados instantâneos
+
+## 🚧 Roadmap
+
+### 🎯 Próximas Features
+- [ ] **ML/AI Predictions** - Prophet, XGBoost, LSTM
+- [ ] **Sistema de Alertas** - Email, Telegram, Discord
+- [ ] **API REST** - Endpoints para terceiros
+- [ ] **Mobile App** - React Native
+- [ ] **Portfolio Tracker** - Acompanhar inventários
+- [ ] **Trading Bot** - Automação de trades
+
+### 🔮 Futuro
+- [ ] **Multi-games** - DOTA 2, TF2
+- [ ] **Social Features** - Comunidade de traders
+- [ ] **Marketplace** - Trading direto na plataforma
+- [ ] **Analytics Avançadas** - BI completo
+
+## 🤝 Contribuindo
+
 1. Fork o projeto
-2. Crie sua feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+2. Crie uma branch (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
-## 📊 **Roadmap**
+## 📄 Licença
 
-### **Q1 2025**
-- [ ] Mobile App (React Native)
-- [ ] GraphQL API
-- [ ] Advanced ML models
-- [ ] Real-time WebSocket feeds
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-### **Q2 2025**
-- [ ] Multi-game support
-- [ ] Social trading features
-- [ ] API marketplace
-- [ ] Enterprise dashboard
+## 📞 Contato
 
-## 📄 **Licença**
-
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
-
-## 🤝 **Suporte**
-
-- 📧 Email: suporte@skinlytics.com
-- 💬 Discord: [Skinlytics Community](https://discord.gg/skinlytics)
-- 📱 Telegram: [@SkinlyticsBot](https://t.me/SkinlyticsBot)
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/skinlytics/issues)
-
-## 🌟 **Agradecimentos**
-
-- [CSFloat](https://csfloat.com/) pela API pública
-- [FastAPI](https://fastapi.tiangolo.com/) pelo framework
-- [Streamlit](https://streamlit.io/) pelo dashboard
-- Comunidade CS2 pelo feedback
+- **GitHub**: [@seu-usuario](https://github.com/seu-usuario)
+- **Email**: seu-email@exemplo.com
+- **Discord**: SeuUser#1234
 
 ---
 
-**Feito com ❤️ pela equipe Skinlytics**
+**🎯 Skinlytics - Sua vantagem competitiva no trading de skins CS2!**
 
-[⭐ Star este projeto](https://github.com/yourusername/skinlytics) se ele foi útil para você!
+[![Deploy to Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io)
