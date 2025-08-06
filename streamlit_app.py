@@ -14,13 +14,22 @@ import numpy as np
 from datetime import datetime, timedelta
 import time
 
-# Configuração otimizada para Railway Free
+# Configuração otimizada para Railway (detecta automaticamente o plano)
 try:
-    from railway_free_config import optimize_for_railway_free, get_optimized_db_connection, RAILWAY_FREE_CONFIG
-    config = optimize_for_railway_free()
+    # Tentar configuração Hobby Plan primeiro (melhor performance)
+    from railway_hobby_config import optimize_for_railway_hobby, get_optimized_db_connection_hobby, RAILWAY_HOBBY_CONFIG
+    config = optimize_for_railway_hobby()
+    print("🔥 Railway Hobby Plan ($5) detected - HIGH PERFORMANCE activated!")
 except ImportError:
-    # Fallback se não estiver no Railway
-    config = {"max_rows_display": 1000, "auto_refresh_interval": 60}
+    try:
+        # Fallback para Free Plan
+        from railway_free_config import optimize_for_railway_free, get_optimized_db_connection, RAILWAY_FREE_CONFIG
+        config = optimize_for_railway_free()
+        print("⚡ Railway Free Plan detected")
+    except ImportError:
+        # Fallback se não estiver no Railway
+        config = {"max_rows_display": 1000, "auto_refresh_interval": 60}
+        print("🏠 Local development mode")
     
 # Imports do nosso sistema (com fallback para Railway)
 try:
@@ -152,23 +161,48 @@ def load_price_trends():
         return []
 
 def show_railway_stats():
-    """Mostra estatísticas de uso do Railway Free Plan"""
+    """Mostra estatísticas de uso do Railway (Free ou Hobby Plan)"""
     if 'RAILWAY_ENVIRONMENT' in os.environ:
         try:
-            from railway_free_config import get_memory_usage
-            memory_stats = get_memory_usage()
-            
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("💾 RAM Usado", f"{memory_stats['memory_used_mb']} MB")
-            with col2:
-                st.metric("📊 Uso (%)", f"{memory_stats['memory_percent']}%")
-            with col3:
-                st.metric("🎯 Limite", f"{memory_stats['memory_limit_mb']} MB")
+            # Tentar carregar stats do Hobby Plan primeiro
+            try:
+                from railway_hobby_config import get_performance_stats
+                stats = get_performance_stats()
                 
-            # Alerta se usar mais de 80% da memória
-            if memory_stats['memory_percent'] > 80:
-                st.warning("⚠️ Alto uso de memória! Considere otimizar queries.")
+                col1, col2, col3, col4 = st.columns(4)
+                with col1:
+                    st.metric("💾 RAM", f"{stats['memory_used_mb']} MB", f"{stats['memory_percent']}%")
+                with col2:
+                    st.metric("⚡ CPU", f"{stats['cpu_percent']}%")
+                with col3:
+                    st.metric("🗄️ DB Pool", f"{stats['db_pool_size']}")
+                with col4:
+                    st.metric("💰 Plano", stats['plan'])
+                    
+                # Alertas inteligentes para Hobby Plan
+                if stats['memory_percent'] > 85:
+                    st.warning("⚠️ Alto uso de memória! Performance pode ser afetada.")
+                elif stats['memory_percent'] > 95:
+                    st.error("🚨 Memória crítica! Considere otimizar queries.")
+                else:
+                    st.success("✅ Performance otimizada - Railway Hobby Plan ativo!")
+                    
+            except ImportError:
+                # Fallback para Free Plan stats
+                from railway_free_config import get_memory_usage
+                memory_stats = get_memory_usage()
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("💾 RAM Usado", f"{memory_stats['memory_used_mb']} MB")
+                with col2:
+                    st.metric("📊 Uso (%)", f"{memory_stats['memory_percent']}%")
+                with col3:
+                    st.metric("🎯 Limite", f"{memory_stats['memory_limit_mb']} MB")
+                    
+                if memory_stats['memory_percent'] > 80:
+                    st.warning("⚠️ Alto uso de memória! Considere otimizar queries.")
+                    
         except Exception:
             pass
 
