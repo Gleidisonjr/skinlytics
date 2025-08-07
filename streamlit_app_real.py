@@ -144,6 +144,80 @@ def create_tables_if_not_exist():
 # Criar tabelas automaticamente
 if 'RAILWAY_ENVIRONMENT' in os.environ:
     create_tables_if_not_exist()
+    
+    # Popular banco com dados de exemplo se estiver vazio
+    try:
+        engine = get_db_connection()
+        if engine:
+            with engine.connect() as conn:
+                result = conn.execute(text("SELECT COUNT(*) FROM listings_optimized"))
+                listings_count = result.fetchone()[0]
+                
+                if listings_count == 0:
+                    st.info("🎯 Populando banco com dados de exemplo...")
+                    
+                    # Importar e executar população
+                    import random
+                    from datetime import datetime, timedelta
+                    
+                    sample_skins = [
+                        ("AK-47 | Redline (FT)", 3, False),
+                        ("AWP | Asiimov (WW)", 4, False),
+                        ("M4A4 | Howl (FN)", 5, True),
+                        ("Karambit | Fade (FN)", 6, False),
+                        ("USP-S | Kill Confirmed (FN)", 4, True),
+                        ("Desert Eagle | Golden Koi (FN)", 4, False),
+                        ("M4A1-S | Hyper Beast (MW)", 3, True),
+                        ("Glock-18 | Water Elemental (FT)", 2, False),
+                        ("P250 | Asiimov (WW)", 3, False),
+                        ("Tec-9 | Nuclear Threat (MW)", 4, True)
+                    ]
+                    
+                    # Inserir skins
+                    skin_ids = []
+                    for skin_name, rarity, is_stattrak in sample_skins:
+                        result = conn.execute(text("""
+                            INSERT INTO skins_optimized (market_hash_name, rarity, is_stattrak)
+                            VALUES (:name, :rarity, :stattrak)
+                            ON CONFLICT DO NOTHING
+                            RETURNING id
+                        """), {
+                            'name': skin_name,
+                            'rarity': rarity,
+                            'stattrak': is_stattrak
+                        })
+                        
+                        skin_id = result.fetchone()
+                        if skin_id:
+                            skin_ids.append(skin_id[0])
+                        else:
+                            result = conn.execute(text("""
+                                SELECT id FROM skins_optimized WHERE market_hash_name = :name
+                            """), {'name': skin_name})
+                            skin_ids.append(result.fetchone()[0])
+                    
+                    # Inserir listings
+                    for i in range(100):
+                        skin_id = random.choice(skin_ids)
+                        price = random.randint(1000, 500000)
+                        float_value = round(random.uniform(0.01, 0.99), 8)
+                        watchers = random.randint(0, 50)
+                        
+                        conn.execute(text("""
+                            INSERT INTO listings_optimized (skin_id, price, float_value, watchers)
+                            VALUES (:skin_id, :price, :float_value, :watchers)
+                        """), {
+                            'skin_id': skin_id,
+                            'price': price,
+                            'float_value': float_value,
+                            'watchers': watchers
+                        })
+                    
+                    conn.commit()
+                    st.success("✅ Dados de exemplo inseridos!")
+                    
+    except Exception as e:
+        st.warning(f"⚠️ Erro ao popular dados: {e}")
 
 @st.cache_data(ttl=300)  # 5 minutos de cache
 def load_real_market_data():
