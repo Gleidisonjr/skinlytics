@@ -77,6 +77,74 @@ def get_db_connection():
         st.error(f"Erro ao conectar com banco: {e}")
         return None
 
+def create_tables_if_not_exist():
+    """Cria as tabelas se não existirem"""
+    engine = get_db_connection()
+    if not engine:
+        return False
+    
+    try:
+        with engine.connect() as conn:
+            # Criar tabela skins_optimized
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS skins_optimized (
+                    id SERIAL PRIMARY KEY,
+                    market_hash_name VARCHAR(255) NOT NULL,
+                    rarity INTEGER DEFAULT 0,
+                    is_stattrak BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """))
+            
+            # Criar tabela listings_optimized
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS listings_optimized (
+                    id SERIAL PRIMARY KEY,
+                    skin_id INTEGER REFERENCES skins_optimized(id),
+                    price INTEGER NOT NULL,
+                    float_value DECIMAL(10,8),
+                    watchers INTEGER DEFAULT 0,
+                    collected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """))
+            
+            # Criar tabela price_history
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS price_history (
+                    id SERIAL PRIMARY KEY,
+                    skin_id INTEGER REFERENCES skins_optimized(id),
+                    price INTEGER NOT NULL,
+                    date DATE NOT NULL,
+                    volume INTEGER DEFAULT 1,
+                    UNIQUE(skin_id, date)
+                )
+            """))
+            
+            # Criar tabela market_insights
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS market_insights (
+                    id SERIAL PRIMARY KEY,
+                    date DATE NOT NULL,
+                    total_listings INTEGER DEFAULT 0,
+                    total_value DECIMAL(15,2) DEFAULT 0,
+                    avg_price DECIMAL(10,2) DEFAULT 0,
+                    volatility_index DECIMAL(5,2) DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(date)
+                )
+            """))
+            
+            conn.commit()
+            return True
+            
+    except Exception as e:
+        st.error(f"Erro ao criar tabelas: {e}")
+        return False
+
+# Criar tabelas automaticamente
+if 'RAILWAY_ENVIRONMENT' in os.environ:
+    create_tables_if_not_exist()
+
 @st.cache_data(ttl=300)  # 5 minutos de cache
 def load_real_market_data():
     """Carrega dados reais do mercado"""
