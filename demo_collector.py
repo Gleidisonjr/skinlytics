@@ -1,66 +1,159 @@
 #!/usr/bin/env python3
 """
-🎯 DEMO COLLECTOR - Dados simulados para teste
-- Insere dados de exemplo no banco
-- Simula coleta real do CSFloat
-- Testa o dashboard com dados reais
+🚀 DEMO COLLECTOR - Coletor otimizado para Windows
+- Respeita rate limits
+- Sem emojis (compatível Windows)
+- Conexões limpas
+- Logs detalhados
 """
 
-import os
-import random
-import time
-from datetime import datetime, timedelta
-from sqlalchemy import create_engine, text
+import asyncio
+import aiohttp
 import logging
+import time
+import os
+import sys
+from datetime import datetime
+from sqlalchemy import create_engine, text
+import json
 
-# Configurar logging
+# Configurar encoding para Windows
+if sys.platform == "win32":
+    import codecs
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+    sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
+
+# Configurar logging sem emojis
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('demo_collector.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
 )
 logger = logging.getLogger(__name__)
 
-class DemoCollector:
+class DemoCSFloatCollector:
     def __init__(self):
+        self.api_key = "phtZp7cjyjCviMBP9J7nvBpEkggaUQQO"
+        self.base_url = "https://csfloat.com/api/v1"
+        self.session = None
+        self.engine = None
+        self.stats = {
+            'requests_made': 0,
+            'successful_requests': 0,
+            'rate_limited': 0,
+            'skins_collected': 0,
+            'listings_collected': 0,
+            'errors': 0
+        }
+        
+    async def setup(self):
+        """Configura conexoes"""
+        # Configurar aiohttp session
+        timeout = aiohttp.ClientTimeout(total=30)
+        self.session = aiohttp.ClientSession(
+            timeout=timeout,
+            headers={
+                'Authorization': f'Bearer {self.api_key}',
+                'User-Agent': 'Skinlytics/1.0'
+            }
+        )
+        
         # Configurar banco de dados
         if 'DATABASE_URL' in os.environ:
             self.engine = create_engine(os.environ['DATABASE_URL'])
         else:
             self.engine = create_engine('sqlite:///data/skins_saas.db')
             
-        # Dados de exemplo
-        self.sample_skins = [
-            ("AK-47 | Redline (FT)", 3, False),
-            ("AWP | Asiimov (WW)", 4, False),
-            ("M4A4 | Howl (FN)", 5, True),
-            ("Karambit | Fade (FN)", 6, False),
-            ("USP-S | Kill Confirmed (FN)", 4, True),
-            ("Desert Eagle | Golden Koi (FN)", 4, False),
-            ("M4A1-S | Hyper Beast (MW)", 3, True),
-            ("Glock-18 | Water Elemental (FT)", 2, False),
-            ("P250 | Asiimov (WW)", 3, False),
-            ("Tec-9 | Nuclear Threat (MW)", 4, True),
-            ("FAMAS | Pulse (FN)", 2, False),
-            ("Galil AR | Cerberus (MW)", 3, True),
-            ("SSG 08 | Blood in the Water (MW)", 3, False),
-            ("AUG | Chameleon (FN)", 4, False),
-            ("SG 553 | Cyrex (FT)", 3, True),
-            ("MAC-10 | Heat (WW)", 2, False),
-            ("MP9 | Hot Rod (FN)", 3, True),
-            ("UMP-45 | Grand Prix (MW)", 2, False),
-            ("P90 | Asiimov (FT)", 3, False),
-            ("PP-Bizon | Antique (WW)", 2, True)
-        ]
+        logger.info("Conexoes configuradas")
         
-    def insert_sample_data(self, num_listings=100):
-        """Insere dados de exemplo no banco"""
-        logger.info(f"🎯 Inserindo {num_listings} listings de exemplo...")
+    async def cleanup(self):
+        """Limpa recursos"""
+        if self.session:
+            await self.session.close()
+        logger.info("Recursos limpos")
+        
+    async def make_request(self, url, params=None, delay=5.0):
+        """Faz requisicao com delay e retry"""
+        self.stats['requests_made'] += 1
+        
+        # Delay para respeitar rate limits
+        await asyncio.sleep(delay)
         
         try:
+            async with self.session.get(url, params=params) as response:
+                if response.status == 429:
+                    self.stats['rate_limited'] += 1
+                    logger.warning(f"Rate limited - aguardando 120s")
+                    await asyncio.sleep(120)  # Espera 2 minutos
+                    return None
+                    
+                elif response.status == 200:
+                    self.stats['successful_requests'] += 1
+                    data = await response.json()
+                    return data
+                    
+                else:
+                    logger.error(f"Erro {response.status}: {await response.text()}")
+                    self.stats['errors'] += 1
+                    return None
+                    
+        except Exception as e:
+            logger.error(f"Erro na requisicao: {e}")
+            self.stats['errors'] += 1
+            return None
+            
+    async def collect_listings(self, strategy='newest', max_pages=2):
+        """Coleta listings com estrategia especifica"""
+        logger.info(f"Coletando listings: {strategy}")
+        
+        collected_data = []
+        
+        for page in range(max_pages):
+            params = {
+                'page': page,
+                'limit': 25,  # Reduzido para 25
+                'sort_by': strategy,
+                'category': 0
+            }
+            
+            url = f"{self.base_url}/listings"
+            data = await self.make_request(url, params, delay=10.0)  # Delay aumentado
+            
+            if not data or 'data' not in data:
+                logger.warning(f"Sem dados na pagina {page}")
+                break
+                
+            listings = data['data']
+            if not listings:
+                logger.info(f"Fim dos dados na pagina {page}")
+                break
+                
+            collected_data.extend(listings)
+            logger.info(f"Pagina {page}: {len(listings)} listings")
+            
+            # Delay entre paginas
+            await asyncio.sleep(15.0)  # Delay aumentado
+            
+        return collected_data
+        
+    async def save_to_database(self, listings):
+        """Salva dados no banco"""
+        if not listings:
+            return
+            
+        try:
             with self.engine.connect() as conn:
-                # Inserir skins
-                skin_ids = []
-                for skin_name, rarity, is_stattrak in self.sample_skins:
+                for listing in listings:
+                    # Extrair dados do listing
+                    skin_name = listing.get('market_hash_name', 'Unknown')
+                    price = listing.get('price', 0)
+                    float_value = listing.get('float_value', 0)
+                    watchers = listing.get('watchers', 0)
+                    
+                    # Inserir skin se nao existir
                     result = conn.execute(text("""
                         INSERT INTO skins_optimized (market_hash_name, rarity, is_stattrak)
                         VALUES (:name, :rarity, :stattrak)
@@ -68,27 +161,21 @@ class DemoCollector:
                         RETURNING id
                     """), {
                         'name': skin_name,
-                        'rarity': rarity,
-                        'stattrak': is_stattrak
+                        'rarity': 0,  # Default
+                        'stattrak': 'StatTrak' in skin_name
                     })
                     
                     skin_id = result.fetchone()
                     if skin_id:
-                        skin_ids.append(skin_id[0])
+                        skin_id = skin_id[0]
                     else:
                         # Buscar skin existente
                         result = conn.execute(text("""
                             SELECT id FROM skins_optimized WHERE market_hash_name = :name
                         """), {'name': skin_name})
-                        skin_ids.append(result.fetchone()[0])
-                
-                # Inserir listings
-                for i in range(num_listings):
-                    skin_id = random.choice(skin_ids)
-                    price = random.randint(1000, 500000)  # $10 - $5000
-                    float_value = round(random.uniform(0.01, 0.99), 8)
-                    watchers = random.randint(0, 50)
+                        skin_id = result.fetchone()[0]
                     
+                    # Inserir listing
                     conn.execute(text("""
                         INSERT INTO listings_optimized (skin_id, price, float_value, watchers)
                         VALUES (:skin_id, :price, :float_value, :watchers)
@@ -99,104 +186,58 @@ class DemoCollector:
                         'watchers': watchers
                     })
                     
-                    if (i + 1) % 20 == 0:
-                        logger.info(f"📦 Inseridos {i + 1}/{num_listings} listings")
-                
-                # Inserir histórico de preços (últimos 30 dias)
-                logger.info("📈 Inserindo histórico de preços...")
-                for skin_id in skin_ids:
-                    for days_ago in range(30):
-                        date = datetime.now() - timedelta(days=days_ago)
-                        base_price = random.randint(1000, 500000)
-                        # Variação de ±20%
-                        price_variation = random.uniform(0.8, 1.2)
-                        price = int(base_price * price_variation)
-                        volume = random.randint(10, 200)
-                        
-                        conn.execute(text("""
-                            INSERT INTO price_history (skin_id, price, date, volume)
-                            VALUES (:skin_id, :price, :date, :volume)
-                            ON CONFLICT DO NOTHING
-                        """), {
-                            'skin_id': skin_id,
-                            'price': price,
-                            'date': date.date(),
-                            'volume': volume
-                        })
-                
-                # Inserir insights de mercado
-                logger.info("📊 Inserindo insights de mercado...")
-                for days_ago in range(7):
-                    date = datetime.now() - timedelta(days=days_ago)
-                    total_listings = random.randint(5000, 15000)
-                    total_value = random.uniform(500000, 2000000)
-                    avg_price = total_value / total_listings
-                    volatility = random.uniform(0.1, 0.5)
-                    
-                    conn.execute(text("""
-                        INSERT INTO market_insights (date, total_listings, total_value, avg_price, volatility_index)
-                        VALUES (:date, :listings, :value, :avg_price, :volatility)
-                        ON CONFLICT DO NOTHING
-                    """), {
-                        'date': date.date(),
-                        'listings': total_listings,
-                        'value': total_value,
-                        'avg_price': avg_price,
-                        'volatility': volatility
-                    })
-                
                 conn.commit()
-                logger.info("✅ Dados de exemplo inseridos com sucesso!")
-                
-                # Mostrar estatísticas
-                self.show_database_stats()
+                self.stats['listings_collected'] += len(listings)
+                logger.info(f"Salvos {len(listings)} listings no banco")
                 
         except Exception as e:
-            logger.error(f"❌ Erro ao inserir dados: {e}")
+            logger.error(f"Erro ao salvar no banco: {e}")
             
-    def show_database_stats(self):
-        """Mostra estatísticas do banco"""
-        try:
-            with self.engine.connect() as conn:
-                # Contar skins
-                result = conn.execute(text("SELECT COUNT(*) FROM skins_optimized"))
-                skins_count = result.fetchone()[0]
-                
-                # Contar listings
-                result = conn.execute(text("SELECT COUNT(*) FROM listings_optimized"))
-                listings_count = result.fetchone()[0]
-                
-                # Valor total
-                result = conn.execute(text("SELECT SUM(price) FROM listings_optimized WHERE price > 0"))
-                total_value = result.fetchone()[0] or 0
-                
-                # Preço médio
-                result = conn.execute(text("SELECT AVG(price) FROM listings_optimized WHERE price > 0"))
-                avg_price = result.fetchone()[0] or 0
-                
-                logger.info("📊 ESTATÍSTICAS DO BANCO:")
-                logger.info(f"   🎨 Skins: {skins_count}")
-                logger.info(f"   📦 Listings: {listings_count}")
-                logger.info(f"   💰 Valor Total: ${total_value/100:,.2f}")
-                logger.info(f"   📈 Preço Médio: ${avg_price/100:.2f}")
-                
-        except Exception as e:
-            logger.error(f"❌ Erro ao mostrar estatísticas: {e}")
+    async def show_stats(self):
+        """Mostra estatisticas"""
+        logger.info("ESTATISTICAS DA COLETA:")
+        logger.info(f"   Requisicoes feitas: {self.stats['requests_made']}")
+        logger.info(f"   Requisicoes bem-sucedidas: {self.stats['successful_requests']}")
+        logger.info(f"   Rate limited: {self.stats['rate_limited']}")
+        logger.info(f"   Listings coletados: {self.stats['listings_collected']}")
+        logger.info(f"   Erros: {self.stats['errors']}")
+        
+    async def run_collection(self, cycles=1):
+        """Executa coleta completa"""
+        logger.info("INICIANDO COLETA DEMO")
+        
+        await self.setup()
+        
+        strategies = ['newest']  # Apenas uma estrategia
+        
+        for cycle in range(cycles):
+            logger.info(f"Ciclo {cycle + 1}/{cycles}")
             
-    def run_demo(self, num_listings=200):
-        """Executa demonstração completa"""
-        logger.info("🎯 INICIANDO DEMO COLLECTOR")
-        logger.info("=" * 50)
+            for strategy in strategies:
+                logger.info(f"Estrategia: {strategy}")
+                
+                listings = await self.collect_listings(strategy, max_pages=1)  # Apenas 1 pagina
+                
+                if listings:
+                    await self.save_to_database(listings)
+                    
+                # Delay entre estrategias
+                await asyncio.sleep(30.0)
+                
+            # Delay entre ciclos
+            if cycle < cycles - 1:
+                logger.info("Aguardando 60s antes do proximo ciclo...")
+                await asyncio.sleep(60.0)
+                
+        await self.show_stats()
+        await self.cleanup()
         
-        self.insert_sample_data(num_listings)
-        
-        logger.info("🎉 Demo concluída!")
-        logger.info("🌐 Acesse: https://skinlytics-production.up.railway.app")
+        logger.info("Coleta concluida!")
 
-def main():
-    """Função principal"""
-    collector = DemoCollector()
-    collector.run_demo(num_listings=300)
+async def main():
+    """Funcao principal"""
+    collector = DemoCSFloatCollector()
+    await collector.run_collection(cycles=1)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
