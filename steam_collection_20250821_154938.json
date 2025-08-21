@@ -1,0 +1,559 @@
+{
+  "metadata": {
+    "total_skins": 30,
+    "steam_count": 19,
+    "collection_timestamp": "2025-08-21T15:49:38.889984",
+    "sources": [
+      "steam_market"
+    ],
+    "note": "Dados coletados apenas do Steam Market (Pricempire API retornando 403)"
+  },
+  "skins": {
+    "★ Hand Wraps | Spruce DDPAT (Factory New)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:02.474814"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Spruce DDPAT (Minimal Wear)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:03.756838"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Spruce DDPAT (Field-Tested)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:05.002021"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Spruce DDPAT (Well-Worn)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "lowest_price": "$299.99"
+        },
+        "timestamp": "2025-08-21T15:49:06.281926"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 299.99,
+        "type": "lowest"
+      },
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 299.99,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Spruce DDPAT (Battle-Scarred)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "lowest_price": "$250.04"
+        },
+        "timestamp": "2025-08-21T15:49:07.528698"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 250.04,
+        "type": "lowest"
+      },
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 250.04,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Desert Shamagh (Factory New)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:08.908233"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Desert Shamagh (Minimal Wear)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:10.168910"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Desert Shamagh (Field-Tested)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "volume": "5",
+          "median_price": "$125.01"
+        },
+        "timestamp": "2025-08-21T15:49:11.431541"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 125.01,
+        "type": "median"
+      },
+      "price_info": {
+        "median_price": 125.01,
+        "lowest_price": 0,
+        "volume": "5",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Desert Shamagh (Well-Worn)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "volume": "1",
+          "median_price": "$125.01"
+        },
+        "timestamp": "2025-08-21T15:49:12.721623"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 125.01,
+        "type": "median"
+      },
+      "price_info": {
+        "median_price": 125.01,
+        "lowest_price": 0,
+        "volume": "1",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Desert Shamagh (Battle-Scarred)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "volume": "7",
+          "median_price": "$125.94"
+        },
+        "timestamp": "2025-08-21T15:49:13.979640"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 125.94,
+        "type": "median"
+      },
+      "price_info": {
+        "median_price": 125.94,
+        "lowest_price": 0,
+        "volume": "7",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Badlands (Factory New)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:15.237397"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Badlands (Minimal Wear)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:16.481069"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Badlands (Field-Tested)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:17.728328"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Badlands (Well-Worn)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "volume": "1",
+          "median_price": "$197.76"
+        },
+        "timestamp": "2025-08-21T15:49:18.978200"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 197.76,
+        "type": "median"
+      },
+      "price_info": {
+        "median_price": 197.76,
+        "lowest_price": 0,
+        "volume": "1",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | Badlands (Battle-Scarred)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:20.227726"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | CAUTION! (Factory New)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:21.503360"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | CAUTION! (Minimal Wear)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:22.752053"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | CAUTION! (Field-Tested)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true,
+          "volume": "5",
+          "median_price": "$375.43"
+        },
+        "timestamp": "2025-08-21T15:49:24.003990"
+      },
+      "best_price": {
+        "source": "steam_market",
+        "price": 375.43,
+        "type": "median"
+      },
+      "price_info": {
+        "median_price": 375.43,
+        "lowest_price": 0,
+        "volume": "5",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | CAUTION! (Well-Worn)": {
+      "steam_market": {
+        "source": "steam_market",
+        "data": {
+          "success": true
+        },
+        "timestamp": "2025-08-21T15:49:25.275480"
+      },
+      "best_price": null,
+      "price_info": {
+        "median_price": 0,
+        "lowest_price": 0,
+        "volume": "0",
+        "success": true
+      }
+    },
+    "★ Hand Wraps | CAUTION! (Battle-Scarred)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Duct Tape (Factory New)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Duct Tape (Minimal Wear)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Duct Tape (Field-Tested)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Duct Tape (Well-Worn)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Duct Tape (Battle-Scarred)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Cobalt Skulls (Factory New)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Cobalt Skulls (Minimal Wear)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Cobalt Skulls (Field-Tested)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Cobalt Skulls (Well-Worn)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    },
+    "★ Hand Wraps | Cobalt Skulls (Battle-Scarred)": {
+      "steam_market": null,
+      "best_price": null,
+      "price_info": {}
+    }
+  },
+  "steam_market": {
+    "★ Hand Wraps | Spruce DDPAT (Factory New)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:02.474814"
+    },
+    "★ Hand Wraps | Spruce DDPAT (Minimal Wear)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:03.756838"
+    },
+    "★ Hand Wraps | Spruce DDPAT (Field-Tested)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:05.002021"
+    },
+    "★ Hand Wraps | Spruce DDPAT (Well-Worn)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "lowest_price": "$299.99"
+      },
+      "timestamp": "2025-08-21T15:49:06.281926"
+    },
+    "★ Hand Wraps | Spruce DDPAT (Battle-Scarred)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "lowest_price": "$250.04"
+      },
+      "timestamp": "2025-08-21T15:49:07.528698"
+    },
+    "★ Hand Wraps | Desert Shamagh (Factory New)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:08.908233"
+    },
+    "★ Hand Wraps | Desert Shamagh (Minimal Wear)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:10.168910"
+    },
+    "★ Hand Wraps | Desert Shamagh (Field-Tested)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "volume": "5",
+        "median_price": "$125.01"
+      },
+      "timestamp": "2025-08-21T15:49:11.431541"
+    },
+    "★ Hand Wraps | Desert Shamagh (Well-Worn)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "volume": "1",
+        "median_price": "$125.01"
+      },
+      "timestamp": "2025-08-21T15:49:12.721623"
+    },
+    "★ Hand Wraps | Desert Shamagh (Battle-Scarred)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "volume": "7",
+        "median_price": "$125.94"
+      },
+      "timestamp": "2025-08-21T15:49:13.979640"
+    },
+    "★ Hand Wraps | Badlands (Factory New)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:15.237397"
+    },
+    "★ Hand Wraps | Badlands (Minimal Wear)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:16.481069"
+    },
+    "★ Hand Wraps | Badlands (Field-Tested)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:17.728328"
+    },
+    "★ Hand Wraps | Badlands (Well-Worn)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "volume": "1",
+        "median_price": "$197.76"
+      },
+      "timestamp": "2025-08-21T15:49:18.978200"
+    },
+    "★ Hand Wraps | Badlands (Battle-Scarred)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:20.227726"
+    },
+    "★ Hand Wraps | CAUTION! (Factory New)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:21.503360"
+    },
+    "★ Hand Wraps | CAUTION! (Minimal Wear)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:22.752053"
+    },
+    "★ Hand Wraps | CAUTION! (Field-Tested)": {
+      "source": "steam_market",
+      "data": {
+        "success": true,
+        "volume": "5",
+        "median_price": "$375.43"
+      },
+      "timestamp": "2025-08-21T15:49:24.003990"
+    },
+    "★ Hand Wraps | CAUTION! (Well-Worn)": {
+      "source": "steam_market",
+      "data": {
+        "success": true
+      },
+      "timestamp": "2025-08-21T15:49:25.275480"
+    }
+  }
+}
